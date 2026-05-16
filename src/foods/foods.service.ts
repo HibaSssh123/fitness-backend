@@ -9,7 +9,12 @@ export class FoodsService {
   create(userId: string, createFoodDto: CreateFoodDto) {
     return this.prisma.food.create({
       data: {
-        ...createFoodDto,
+        name: createFoodDto.name,
+        calories: createFoodDto.calories,
+        protein: createFoodDto.protein,
+        carbs: createFoodDto.carbs,
+        fat: createFoodDto.fat,
+        defaultServingUnit: createFoodDto.servingUnit ?? 'SERVING',
         createdById: userId,
       },
     });

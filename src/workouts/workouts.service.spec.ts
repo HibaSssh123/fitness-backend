@@ -39,14 +39,25 @@ describe('WorkoutsService', () => {
     ]);
     prismaMock.workout.create.mockResolvedValueOnce({
       id: 'workout-1',
-      totalCaloriesBurned: 347,
+      totalCaloriesBurned: 328,
+      exercises: [],
     });
 
     const result = await service.create('user-1', {
       duration: 50,
       exercises: [
-        { exerciseId: 'ex-1', sets: 4, reps: 8, weight: 60, rpe: 8 },
-        { exerciseId: 'ex-2', duration: 20, distance: 2 },
+        {
+          exerciseId: 'ex-1',
+          sets: [
+            { reps: 10, weight: 45, rpe: 7, duration: 3 },
+            { reps: 8, weight: 50, rpe: 8, duration: 3 },
+            { reps: 6, weight: 55, rpe: 9, duration: 3 },
+          ],
+        },
+        {
+          exerciseId: 'ex-2',
+          sets: [{ duration: 20, distance: 2 }],
+        },
       ],
     });
 
@@ -57,12 +68,32 @@ describe('WorkoutsService', () => {
     expect(createCalls[0]?.[0]).toMatchObject({
       data: {
         userId: 'user-1',
-        totalCaloriesBurned: 347,
+        totalCaloriesBurned: 328,
         exercises: {
           create: [
             expect.objectContaining({
               exerciseId: 'ex-1',
-              caloriesBurned: 67,
+              caloriesBurned: 48,
+              sets: 3,
+              workoutSets: {
+                create: [
+                  expect.objectContaining({
+                    setNumber: 1,
+                    reps: 10,
+                    weight: 45,
+                  }),
+                  expect.objectContaining({
+                    setNumber: 2,
+                    reps: 8,
+                    weight: 50,
+                  }),
+                  expect.objectContaining({
+                    setNumber: 3,
+                    reps: 6,
+                    weight: 55,
+                  }),
+                ],
+              },
             }),
             expect.objectContaining({
               exerciseId: 'ex-2',
@@ -72,12 +103,18 @@ describe('WorkoutsService', () => {
         },
       },
     });
-    expect(result).toEqual({ id: 'workout-1', totalCaloriesBurned: 347 });
+    expect(result).toEqual({
+      id: 'workout-1',
+      totalCaloriesBurned: 328,
+      exercises: [],
+    });
   });
 
   it('lists workouts with pagination defaults', async () => {
     prismaMock.workout.count.mockResolvedValueOnce(1);
-    prismaMock.workout.findMany.mockResolvedValueOnce([{ id: 'workout-1' }]);
+    prismaMock.workout.findMany.mockResolvedValueOnce([
+      { id: 'workout-1', exercises: [] },
+    ]);
 
     const result = await service.list('user-1', {});
 

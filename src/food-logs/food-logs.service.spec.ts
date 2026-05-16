@@ -5,8 +5,21 @@ import { PrismaService } from '../prisma/prisma.service';
 describe('FoodLogsService', () => {
   let service: FoodLogsService;
 
+  type FoodLogCreateArgs = {
+    data: {
+      userId: string;
+      foodId: string;
+      serving: number;
+      servingUnit: string;
+      mealType: string;
+      date: Date;
+    };
+    include: { food: boolean };
+  };
+
   const prismaMock = {
     foodLog: {
+      create: jest.fn<Promise<{ id: string }>, [FoodLogCreateArgs]>(),
       findMany: jest.fn(),
     },
   };
@@ -41,5 +54,21 @@ describe('FoodLogsService', () => {
     expect(totals.protein).toBe(20);
     expect(totals.carbs).toBe(50);
     expect(totals.fat).toBe(11);
+  });
+
+  it('creates a food log with meal type and serving unit defaults', async () => {
+    prismaMock.foodLog.create.mockResolvedValueOnce({ id: 'log-1' });
+
+    await service.create('u1', { foodId: 'food-1', serving: 1.5 });
+
+    const createArgs = prismaMock.foodLog.create.mock.calls[0]?.[0];
+    expect(createArgs).toBeDefined();
+    expect(createArgs?.include).toEqual({ food: true });
+    expect(createArgs?.data.userId).toBe('u1');
+    expect(createArgs?.data.foodId).toBe('food-1');
+    expect(createArgs?.data.serving).toBe(1.5);
+    expect(createArgs?.data.servingUnit).toBe('SERVING');
+    expect(createArgs?.data.mealType).toBe('SNACK');
+    expect(createArgs?.data.date).toBeInstanceOf(Date);
   });
 });

@@ -1,44 +1,46 @@
 import { Type } from 'class-transformer';
-import { ServingUnit } from '@prisma/client';
 import {
-  IsEnum,
+  IsBoolean,
   IsInt,
   IsNumber,
   IsOptional,
-  IsString,
-  MaxLength,
+  Max,
   Min,
 } from 'class-validator';
 
-export class CreateFoodDto {
-  @IsString()
-  @MaxLength(120)
-  name!: string;
-
+export class AddWorkoutSetDto {
+  @IsOptional()
   @Type(() => Number)
   @IsInt()
-  @Min(0)
-  calories!: number;
+  @Min(1)
+  reps?: number;
 
   @IsOptional()
   @Type(() => Number)
   @IsNumber()
   @Min(0)
-  protein?: number;
+  weight?: number;
+
+  @IsOptional()
+  @Type(() => Number)
+  @IsInt()
+  @Min(1)
+  duration?: number;
 
   @IsOptional()
   @Type(() => Number)
   @IsNumber()
   @Min(0)
-  carbs?: number;
+  distance?: number;
 
   @IsOptional()
   @Type(() => Number)
   @IsNumber()
-  @Min(0)
-  fat?: number;
+  @Min(1)
+  @Max(10)
+  rpe?: number;
 
   @IsOptional()
-  @IsEnum(ServingUnit)
-  servingUnit?: ServingUnit;
+  @IsBoolean()
+  completed?: boolean;
 }

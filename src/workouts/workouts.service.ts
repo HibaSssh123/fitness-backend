@@ -6,8 +6,19 @@ import {
 import { ExerciseType } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { AddExerciseToWorkoutDto } from './dto/add-exercise-to-workout.dto';
+import { AddWorkoutSetDto } from './dto/add-workout-set.dto';
 import { CreateWorkoutDto } from './dto/create-workout.dto';
 import { UpdateWorkoutDto } from './dto/update-workout.dto';
+
+const LEGACY_EXERCISE_FIELDS = [
+  'sets',
+  'reps',
+  'weight',
+  'duration',
+  'distance',
+  'rpe',
+  'workoutSets',
+] as const;
 
 @Injectable()
 export class WorkoutsService {
@@ -18,7 +29,7 @@ export class WorkoutsService {
       createWorkoutDto.exercises ?? [],
     );
 
-    return this.prisma.workout.create({
+    const workout = await this.prisma.workout.create({
       data: {
         userId,
         date: createWorkoutDto.date
@@ -33,11 +44,16 @@ export class WorkoutsService {
       },
       include: {
         exercises: {
-          include: { exercise: { include: { category: true } } },
+          include: {
+            exercise: { include: { category: true } },
+            workoutSets: { orderBy: { setNumber: 'asc' } },
+          },
           orderBy: { createdAt: 'asc' },
         },
       },
     });
+
+    return this.mapWorkoutResponse(workout);
   }
 
   async list(
@@ -92,7 +108,10 @@ export class WorkoutsService {
         take: limit,
         include: {
           exercises: {
-            include: { exercise: true },
+            include: {
+              exercise: true,
+              workoutSets: { orderBy: { setNumber: 'asc' } },
+            },
             orderBy: { createdAt: 'asc' },
           },
         },
@@ -100,7 +119,7 @@ export class WorkoutsService {
     ]);
 
     return {
-      items,
+      items: items.map((item) => this.mapWorkoutResponse(item)),
       pagination: {
         page,
         limit,
@@ -115,7 +134,10 @@ export class WorkoutsService {
       where: { id, userId },
       include: {
         exercises: {
-          include: { exercise: { include: { category: true } } },
+          include: {
+            exercise: { include: { category: true } },
+            workoutSets: { orderBy: { setNumber: 'asc' } },
+          },
           orderBy: { createdAt: 'asc' },
         },
       },
@@ -125,7 +147,7 @@ export class WorkoutsService {
       throw new NotFoundException('Workout not found');
     }
 
-    return workout;
+    return this.mapWorkoutResponse(workout);
   }
 
   async update(userId: string, id: string, updateWorkoutDto: UpdateWorkoutDto) {
@@ -141,7 +163,7 @@ export class WorkoutsService {
       ? await this.prepareWorkoutExercises(updateWorkoutDto.exercises)
       : null;
 
-    return this.prisma.workout.update({
+    const workout = await this.prisma.workout.update({
       where: { id },
       data: {
         ...(updateWorkoutDto.date
@@ -165,11 +187,16 @@ export class WorkoutsService {
       },
       include: {
         exercises: {
-          include: { exercise: { include: { category: true } } },
+          include: {
+            exercise: { include: { category: true } },
+            workoutSets: { orderBy: { setNumber: 'asc' } },
+          },
           orderBy: { createdAt: 'asc' },
         },
       },
     });
+
+    return this.mapWorkoutResponse(workout);
   }
 
   async remove(userId: string, id: string) {
@@ -280,14 +307,17 @@ export class WorkoutsService {
         throw new NotFoundException('Exercise not found');
       }
 
-      const caloriesBurned = this.calculateCalories(
-        exerciseType,
-        exerciseEntry,
-      );
+      const setEntries = this.toWorkoutSetEntries(exerciseEntry.sets);
+      const caloriesBurned = this.calculateCalories(exerciseType, setEntries);
+      const legacyFields = this.deriveLegacyFields(setEntries);
 
       return {
-        ...exerciseEntry,
+        exerciseId: exerciseEntry.exerciseId,
+        ...legacyFields,
         caloriesBurned,
+        workoutSets: {
+          create: setEntries,
+        },
       };
     });
 
@@ -302,20 +332,134 @@ export class WorkoutsService {
 
   private calculateCalories(
     exerciseType: ExerciseType,
-    exercise: AddExerciseToWorkoutDto,
+    setEntries: Array<{
+      setNumber: number;
+      reps?: number;
+      weight?: number;
+      duration?: number;
+      distance?: number;
+      rpe?: number;
+      completed: boolean;
+    }>,
   ) {
+    if (!setEntries.length) {
+      return 0;
+    }
+
     if (exerciseType === ExerciseType.CARDIO) {
-      const durationCalories = (exercise.duration ?? 0) * 8;
-      const distanceCalories = (exercise.distance ?? 0) * 60;
+      const durationCalories =
+        setEntries.reduce((sum, entry) => sum + (entry.duration ?? 0), 0) * 8;
+      const distanceCalories =
+        setEntries.reduce((sum, entry) => sum + (entry.distance ?? 0), 0) * 60;
       return Math.round(durationCalories + distanceCalories);
     }
 
-    const sets = exercise.sets ?? 0;
-    const reps = exercise.reps ?? 0;
-    const weight = exercise.weight ?? 0;
-    const estimatedDuration = exercise.duration ?? sets * 3;
-    const effortFactor = (exercise.rpe ?? 6) / 10;
-    const volume = sets * reps * weight;
+    const volume = setEntries.reduce(
+      (sum, entry) => sum + (entry.reps ?? 0) * (entry.weight ?? 0),
+      0,
+    );
+    const estimatedDuration = setEntries.reduce(
+      (sum, entry) => sum + (entry.duration ?? 3),
+      0,
+    );
+    const averageRpe =
+      setEntries.reduce((sum, entry) => sum + (entry.rpe ?? 6), 0) /
+      setEntries.length;
+    const effortFactor = averageRpe / 10;
     return Math.round(estimatedDuration * 5 * effortFactor + volume * 0.01);
+  }
+
+  private toWorkoutSetEntries(sets: AddWorkoutSetDto[]) {
+    return sets.map((set, index) => ({
+      setNumber: index + 1,
+      reps: set.reps,
+      weight: set.weight,
+      duration: set.duration,
+      distance: set.distance,
+      rpe: set.rpe,
+      completed: set.completed ?? true,
+    }));
+  }
+
+  private deriveLegacyFields(
+    setEntries: Array<{
+      reps?: number;
+      weight?: number;
+      duration?: number;
+      distance?: number;
+      rpe?: number;
+    }>,
+  ) {
+    if (!setEntries.length) {
+      return {};
+    }
+
+    const firstSet = setEntries[0];
+    const rpeValues = setEntries
+      .map((entry) => entry.rpe)
+      .filter((entry): entry is number => entry !== undefined);
+
+    return {
+      sets: setEntries.length,
+      reps: firstSet?.reps,
+      weight: firstSet?.weight,
+      duration: setEntries.reduce(
+        (sum, entry) => sum + (entry.duration ?? 0),
+        0,
+      ),
+      distance: setEntries.reduce(
+        (sum, entry) => sum + (entry.distance ?? 0),
+        0,
+      ),
+      rpe: rpeValues.length
+        ? rpeValues.reduce((sum, value) => sum + value, 0) / rpeValues.length
+        : undefined,
+    };
+  }
+
+  private mapWorkoutResponse(workout: {
+    exercises?: Array<{
+      sets?: number | null;
+      reps?: number | null;
+      weight?: number | null;
+      duration?: number | null;
+      distance?: number | null;
+      rpe?: number | null;
+      workoutSets?: Array<{
+        setNumber: number;
+        reps: number | null;
+        weight: number | null;
+        duration: number | null;
+        distance: number | null;
+        rpe: number | null;
+        completed: boolean;
+      }>;
+      [key: string]: unknown;
+    }>;
+    [key: string]: unknown;
+  }) {
+    return {
+      ...workout,
+      exercises: (workout.exercises ?? []).map((exercise) => {
+        const workoutSets = exercise.workoutSets ?? [];
+        const filteredExercise = Object.fromEntries(
+          Object.entries(exercise).filter(
+            ([key]) => !LEGACY_EXERCISE_FIELDS.includes(key as never),
+          ),
+        );
+        return {
+          ...filteredExercise,
+          sets: workoutSets.map((set) => ({
+            setNumber: set.setNumber,
+            reps: set.reps,
+            weight: set.weight,
+            duration: set.duration,
+            distance: set.distance,
+            rpe: set.rpe,
+            completed: set.completed,
+          })),
+        };
+      }),
+    };
   }
 }
