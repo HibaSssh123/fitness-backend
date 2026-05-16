@@ -77,9 +77,21 @@ describe('WorkoutsService', () => {
               sets: 3,
               workoutSets: {
                 create: [
-                  expect.objectContaining({ setNumber: 1, reps: 10, weight: 45 }),
-                  expect.objectContaining({ setNumber: 2, reps: 8, weight: 50 }),
-                  expect.objectContaining({ setNumber: 3, reps: 6, weight: 55 }),
+                  expect.objectContaining({
+                    setNumber: 1,
+                    reps: 10,
+                    weight: 45,
+                  }),
+                  expect.objectContaining({
+                    setNumber: 2,
+                    reps: 8,
+                    weight: 50,
+                  }),
+                  expect.objectContaining({
+                    setNumber: 3,
+                    reps: 6,
+                    weight: 55,
+                  }),
                 ],
               },
             }),

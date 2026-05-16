@@ -1,5 +1,10 @@
 import { Type } from 'class-transformer';
-import { ArrayMinSize, IsArray, IsString, ValidateNested } from 'class-validator';
+import {
+  ArrayMinSize,
+  IsArray,
+  IsString,
+  ValidateNested,
+} from 'class-validator';
 import { AddWorkoutSetDto } from './add-workout-set.dto';
 
 export class AddExerciseToWorkoutDto {

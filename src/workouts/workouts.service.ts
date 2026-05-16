@@ -389,8 +389,14 @@ export class WorkoutsService {
       sets: setEntries.length,
       reps: firstSet?.reps,
       weight: firstSet?.weight,
-      duration: setEntries.reduce((sum, entry) => sum + (entry.duration ?? 0), 0),
-      distance: setEntries.reduce((sum, entry) => sum + (entry.distance ?? 0), 0),
+      duration: setEntries.reduce(
+        (sum, entry) => sum + (entry.duration ?? 0),
+        0,
+      ),
+      distance: setEntries.reduce(
+        (sum, entry) => sum + (entry.distance ?? 0),
+        0,
+      ),
       rpe: rpeValues.length
         ? rpeValues.reduce((sum, value) => sum + value, 0) / rpeValues.length
         : undefined,
@@ -421,28 +427,32 @@ export class WorkoutsService {
     return {
       ...workout,
       exercises: (workout.exercises ?? []).map((exercise) => {
-        const {
-          sets: _legacySets,
-          reps: _legacyReps,
-          weight: _legacyWeight,
-          duration: _legacyDuration,
-          distance: _legacyDistance,
-          rpe: _legacyRpe,
-          workoutSets,
-          ...rest
-        } = exercise;
+        const workoutSets = exercise.workoutSets ?? [];
+        const filteredExercise = Object.fromEntries(
+          Object.entries(exercise).filter(
+            ([key]) =>
+              ![
+                'sets',
+                'reps',
+                'weight',
+                'duration',
+                'distance',
+                'rpe',
+                'workoutSets',
+              ].includes(key),
+          ),
+        );
         return {
-          ...rest,
-          sets:
-            workoutSets?.map((set) => ({
-              setNumber: set.setNumber,
-              reps: set.reps,
-              weight: set.weight,
-              duration: set.duration,
-              distance: set.distance,
-              rpe: set.rpe,
-              completed: set.completed,
-            })) ?? [],
+          ...filteredExercise,
+          sets: workoutSets.map((set) => ({
+            setNumber: set.setNumber,
+            reps: set.reps,
+            weight: set.weight,
+            duration: set.duration,
+            distance: set.distance,
+            rpe: set.rpe,
+            completed: set.completed,
+          })),
         };
       }),
     };
