@@ -10,6 +10,16 @@ import { AddWorkoutSetDto } from './dto/add-workout-set.dto';
 import { CreateWorkoutDto } from './dto/create-workout.dto';
 import { UpdateWorkoutDto } from './dto/update-workout.dto';
 
+const LEGACY_EXERCISE_FIELDS = [
+  'sets',
+  'reps',
+  'weight',
+  'duration',
+  'distance',
+  'rpe',
+  'workoutSets',
+] as const;
+
 @Injectable()
 export class WorkoutsService {
   constructor(private readonly prisma: PrismaService) {}
@@ -332,6 +342,10 @@ export class WorkoutsService {
       completed: boolean;
     }>,
   ) {
+    if (!setEntries.length) {
+      return 0;
+    }
+
     if (exerciseType === ExerciseType.CARDIO) {
       const durationCalories =
         setEntries.reduce((sum, entry) => sum + (entry.duration ?? 0), 0) * 8;
@@ -430,16 +444,7 @@ export class WorkoutsService {
         const workoutSets = exercise.workoutSets ?? [];
         const filteredExercise = Object.fromEntries(
           Object.entries(exercise).filter(
-            ([key]) =>
-              ![
-                'sets',
-                'reps',
-                'weight',
-                'duration',
-                'distance',
-                'rpe',
-                'workoutSets',
-              ].includes(key),
+            ([key]) => !LEGACY_EXERCISE_FIELDS.includes(key as never),
           ),
         );
         return {
