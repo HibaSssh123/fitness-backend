@@ -25,6 +25,29 @@
 
 [Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
 
+## Environment
+
+Copy `.env.example` to `.env` and update values:
+
+```bash
+cp .env.example .env
+```
+
+## API (Phase 1 MVP)
+
+- `POST /auth/register` - Register user and receive JWT
+- `POST /auth/login` - Login and receive JWT
+- `POST /goals` - Create goal (auth)
+- `GET /goals` - Get current goal (auth)
+- `PATCH /goals/:id` - Update goal (auth)
+- `GET /goals/progress?period=today|week` - Goal progress (auth)
+- `POST /foods` - Create food entry (auth)
+- `GET /foods?search=...` - List/search foods (auth)
+- `POST /food-logs` - Log food meal entry (auth)
+- `GET /food-logs?date=YYYY-MM-DD` - Daily logs with totals (auth)
+- `GET /food-logs/totals?date=YYYY-MM-DD` - Daily aggregate totals (auth)
+- `GET /dashboard/daily?date=YYYY-MM-DD` - Daily dashboard summary (auth)
+
 ## Project setup
 
 ```bash
