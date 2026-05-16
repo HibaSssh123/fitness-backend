@@ -47,6 +47,15 @@ cp .env.example .env
 - `GET /food-logs?date=YYYY-MM-DD` - Daily logs with totals (auth)
 - `GET /food-logs/totals?date=YYYY-MM-DD` - Daily aggregate totals (auth)
 - `GET /dashboard/daily?date=YYYY-MM-DD` - Daily dashboard summary (auth)
+- `POST /exercises` - Create exercise (auth)
+- `GET /exercises?type=STRENGTH|CARDIO&category=...&search=...&muscleGroup=...` - List/search exercises
+- `GET /exercises/:id` - Get exercise details
+- `POST /workouts` - Create workout with exercises (auth)
+- `GET /workouts?startDate=YYYY-MM-DD&endDate=YYYY-MM-DD&page=1&limit=20&type=...&muscleGroup=...` - List workouts (auth)
+- `GET /workouts/:id` - Get workout details (auth)
+- `PATCH /workouts/:id` - Update workout (auth)
+- `DELETE /workouts/:id` - Delete workout (auth)
+- `GET /workouts/summary?period=week|month` - Workout summary stats (auth)
 
 ## Project setup
 

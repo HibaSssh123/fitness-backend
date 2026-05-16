@@ -13,6 +13,11 @@ enum GoalType {
   GAIN_WEIGHT
 }
 
+enum ExerciseType {
+  STRENGTH
+  CARDIO
+}
+
 model User {
   id            String   @id @default(cuid())
   email         String   @unique
@@ -31,6 +36,7 @@ model User {
   goals     Goal[]
   goalLogs  GoalLog[]
   foods     Food[]
+  workouts  Workout[]
 }
 
 model Food {
@@ -107,4 +113,63 @@ model GoalLog {
 
   @@unique([goalId, logDate])
   @@index([userId, logDate])
+}
+
+model ExerciseCategory {
+  id        String     @id @default(cuid())
+  name      String     @unique
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  exercises Exercise[]
+}
+
+model Exercise {
+  id            String            @id @default(cuid())
+  name          String
+  type          ExerciseType
+  categoryId    String?
+  description   String?
+  targetMuscles String[]
+  createdAt     DateTime          @default(now())
+  updatedAt     DateTime          @updatedAt
+  category      ExerciseCategory? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  workoutLinks  WorkoutExercise[]
+
+  @@index([type])
+  @@index([categoryId])
+}
+
+model Workout {
+  id                  String            @id @default(cuid())
+  userId              String
+  date                DateTime          @default(now())
+  duration            Int?
+  notes               String?
+  totalCaloriesBurned Int               @default(0)
+  createdAt           DateTime          @default(now())
+  updatedAt           DateTime          @updatedAt
+  user                User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  exercises           WorkoutExercise[]
+
+  @@index([userId, date])
+}
+
+model WorkoutExercise {
+  id             String   @id @default(cuid())
+  workoutId      String
+  exerciseId     String
+  sets           Int?
+  reps           Int?
+  weight         Float?
+  duration       Int?
+  distance       Float?
+  rpe            Float?
+  caloriesBurned Int      @default(0)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  workout        Workout  @relation(fields: [workoutId], references: [id], onDelete: Cascade)
+  exercise       Exercise @relation(fields: [exerciseId], references: [id], onDelete: Restrict)
+
+  @@index([workoutId])
+  @@index([exerciseId])
 }
