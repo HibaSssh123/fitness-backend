@@ -1,0 +1,46 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  name      String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  foodLogs FoodLog[]
+}
+
+model Food {
+  id        String   @id @default(cuid())
+  name      String
+  calories  Int
+  protein   Float?   @default(0)
+  carbs     Float?   @default(0)
+  fat       Float?   @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  logs FoodLog[]
+}
+
+model FoodLog {
+  id        String   @id @default(cuid())
+  userId    String
+  foodId    String
+  serving   Float    @default(1)
+  date      DateTime @default(now())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  food Food @relation(fields: [foodId], references: [id], onDelete: Cascade)
+
+  @@index([userId, date])
+}
