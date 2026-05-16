@@ -1,5 +1,7 @@
 import { Type } from 'class-transformer';
+import { ServingUnit } from '@prisma/client';
 import {
+  IsEnum,
   IsInt,
   IsNumber,
   IsOptional,
@@ -35,4 +37,8 @@ export class CreateFoodDto {
   @IsNumber()
   @Min(0)
   fat?: number;
+
+  @IsOptional()
+  @IsEnum(ServingUnit)
+  servingUnit?: ServingUnit;
 }

@@ -43,14 +43,14 @@ cp .env.example .env
 - `GET /goals/progress?period=today|week` - Goal progress (auth)
 - `POST /foods` - Create food entry (auth)
 - `GET /foods?search=...` - List/search foods (auth)
-- `POST /food-logs` - Log food meal entry (auth)
+- `POST /food-logs` - Log food meal entry with `mealType` and `servingUnit` support (auth)
 - `GET /food-logs?date=YYYY-MM-DD` - Daily logs with totals (auth)
 - `GET /food-logs/totals?date=YYYY-MM-DD` - Daily aggregate totals (auth)
 - `GET /dashboard/daily?date=YYYY-MM-DD` - Daily dashboard summary (auth)
 - `POST /exercises` - Create exercise (auth)
 - `GET /exercises?type=STRENGTH|CARDIO&category=...&search=...&muscleGroup=...` - List/search exercises
 - `GET /exercises/:id` - Get exercise details
-- `POST /workouts` - Create workout with exercises (auth)
+- `POST /workouts` - Create workout with exercises and per-exercise ordered set entries (auth)
 - `GET /workouts?startDate=YYYY-MM-DD&endDate=YYYY-MM-DD&page=1&limit=20&type=...&muscleGroup=...` - List workouts (auth)
 - `GET /workouts/:id` - Get workout details (auth)
 - `PATCH /workouts/:id` - Update workout (auth)

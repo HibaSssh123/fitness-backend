@@ -13,6 +13,8 @@ export class FoodLogsService {
         userId,
         foodId: createFoodLogDto.foodId,
         serving: createFoodLogDto.serving ?? 1,
+        servingUnit: createFoodLogDto.servingUnit ?? 'SERVING',
+        mealType: createFoodLogDto.mealType ?? 'SNACK',
         date: createFoodLogDto.date
           ? new Date(createFoodLogDto.date)
           : new Date(),

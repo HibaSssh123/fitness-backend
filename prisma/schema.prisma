@@ -18,6 +18,21 @@ enum ExerciseType {
   CARDIO
 }
 
+enum MealType {
+  BREAKFAST
+  LUNCH
+  DINNER
+  SNACK
+}
+
+enum ServingUnit {
+  GRAM
+  OUNCE
+  CUP
+  PIECE
+  SERVING
+}
+
 model User {
   id            String   @id @default(cuid())
   email         String   @unique
@@ -46,6 +61,7 @@ model Food {
   protein     Float?   @default(0)
   carbs       Float?   @default(0)
   fat         Float?   @default(0)
+  defaultServingUnit ServingUnit @default(SERVING)
   createdById String?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
@@ -61,6 +77,8 @@ model FoodLog {
   userId    String
   foodId    String
   serving   Float    @default(1)
+  servingUnit ServingUnit @default(SERVING)
+  mealType  MealType @default(SNACK)
   date      DateTime @default(now())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -169,7 +187,26 @@ model WorkoutExercise {
   updatedAt      DateTime @updatedAt
   workout        Workout  @relation(fields: [workoutId], references: [id], onDelete: Cascade)
   exercise       Exercise @relation(fields: [exerciseId], references: [id], onDelete: Restrict)
+  workoutSets    WorkoutSet[]
 
   @@index([workoutId])
   @@index([exerciseId])
+}
+
+model WorkoutSet {
+  id                String          @id @default(cuid())
+  workoutExerciseId String
+  setNumber         Int
+  reps              Int?
+  weight            Float?
+  duration          Int?
+  distance          Float?
+  rpe               Float?
+  completed         Boolean         @default(true)
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+  workoutExercise   WorkoutExercise @relation(fields: [workoutExerciseId], references: [id], onDelete: Cascade)
+
+  @@unique([workoutExerciseId, setNumber])
+  @@index([workoutExerciseId])
 }
