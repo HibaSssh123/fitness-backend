@@ -4,30 +4,50 @@ generator client {
 
 datasource db {
   provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum GoalType {
+  LOSE_WEIGHT
+  MAINTAIN_WEIGHT
+  GAIN_WEIGHT
 }
 
 model User {
-  id        String   @id @default(cuid())
-  email     String   @unique
-  password  String
-  name      String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id            String   @id @default(cuid())
+  email         String   @unique
+  password      String
+  name          String?
+  weightKg      Float?
+  heightCm      Float?
+  calorieTarget Int?
+  proteinTarget Float?
+  carbsTarget   Float?
+  fatTarget     Float?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
 
-  foodLogs FoodLog[]
+  foodLogs  FoodLog[]
+  goals     Goal[]
+  goalLogs  GoalLog[]
+  foods     Food[]
 }
 
 model Food {
-  id        String   @id @default(cuid())
-  name      String
-  calories  Int
-  protein   Float?   @default(0)
-  carbs     Float?   @default(0)
-  fat       Float?   @default(0)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id          String   @id @default(cuid())
+  name        String
+  calories    Int
+  protein     Float?   @default(0)
+  carbs       Float?   @default(0)
+  fat         Float?   @default(0)
+  createdById String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
-  logs FoodLog[]
+  logs      FoodLog[]
+  createdBy User?     @relation(fields: [createdById], references: [id], onDelete: SetNull)
+
+  @@index([createdById])
 }
 
 model FoodLog {
@@ -42,5 +62,49 @@ model FoodLog {
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
   food Food @relation(fields: [foodId], references: [id], onDelete: Cascade)
 
+  @@index([userId, createdAt])
   @@index([userId, date])
+}
+
+model Goal {
+  id              String    @id @default(cuid())
+  userId          String
+  type            GoalType
+  startWeightKg   Float?
+  targetWeightKg  Float?
+  targetCalories  Int
+  targetProtein   Float?
+  targetCarbs     Float?
+  targetFat       Float?
+  startDate       DateTime  @default(now())
+  endDate         DateTime?
+  isActive        Boolean   @default(true)
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  logs            GoalLog[]
+
+  @@index([userId, isActive])
+  @@index([userId, createdAt])
+}
+
+model GoalLog {
+  id               String   @id @default(cuid())
+  goalId           String
+  userId           String
+  logDate          DateTime
+  consumedCalories Int?
+  consumedProtein  Float?
+  consumedCarbs    Float?
+  consumedFat      Float?
+  weightKg         Float?
+  note             String?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  goal Goal @relation(fields: [goalId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([goalId, logDate])
+  @@index([userId, logDate])
 }
