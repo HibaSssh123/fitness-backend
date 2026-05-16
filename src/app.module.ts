@@ -8,6 +8,8 @@ import { GoalsModule } from './goals/goals.module';
 import { FoodsModule } from './foods/foods.module';
 import { FoodLogsModule } from './food-logs/food-logs.module';
 import { DashboardModule } from './dashboard/dashboard.module';
+import { ExercisesModule } from './exercises/exercises.module';
+import { WorkoutsModule } from './workouts/workouts.module';
 
 @Module({
   imports: [
@@ -18,6 +20,8 @@ import { DashboardModule } from './dashboard/dashboard.module';
     FoodsModule,
     FoodLogsModule,
     DashboardModule,
+    ExercisesModule,
+    WorkoutsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
