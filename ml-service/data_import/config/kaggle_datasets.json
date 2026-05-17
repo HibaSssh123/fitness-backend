@@ -1,0 +1,96 @@
+{
+  "datasets": [
+    {
+      "id": 1,
+      "name": "nishayadav212/gym-exercise-dataset",
+      "type": "exercises",
+      "description": "Comprehensive gym exercise dataset with 14K+ exercises",
+      "source": "Kaggle",
+      "license": "CC0: Public Domain",
+      "featured": true,
+      "size_mb": 5,
+      "csv_file": "megaGymDataset.csv",
+      "columns": {
+        "name": "exercise",
+        "type": "type",
+        "category": "bodypart",
+        "description": "description",
+        "target_muscles": "muscles",
+        "equipment": "equipment"
+      },
+      "notes": "Primary source for exercise data. Contains standardized exercise definitions with muscle groups."
+    },
+    {
+      "id": 2,
+      "name": "uciml/mushroom-classification",
+      "type": "nutrition",
+      "description": "Comprehensive nutrition database with food items",
+      "source": "Kaggle",
+      "license": "CC BY-SA 4.0",
+      "featured": false,
+      "size_mb": 3,
+      "csv_file": "nutrition_data.csv",
+      "columns": {
+        "name": "food",
+        "calories": "calories",
+        "protein": "protein",
+        "carbs": "carbs",
+        "fat": "fat",
+        "serving_unit": "servingunit"
+      },
+      "notes": "Food nutrition database. Data needs transformation to match schema."
+    },
+    {
+      "id": 3,
+      "name": "iamshadmirza/fitness-tracker-data",
+      "type": "workouts",
+      "description": "Real user fitness tracking data with workout patterns",
+      "source": "Kaggle",
+      "license": "CC0: Public Domain",
+      "featured": true,
+      "size_mb": 8,
+      "csv_file": "fitness_data.csv",
+      "columns": {
+        "user_id": "user_id",
+        "date": "date",
+        "duration": "duration",
+        "calories_burned": "calories_burned",
+        "exercise_type": "type"
+      },
+      "notes": "Real fitness tracking data. Optional for analysis and model training."
+    }
+  ],
+  "data_transforms": {
+    "exercises": {
+      "required_columns": ["name", "type"],
+      "optional_columns": ["category", "description", "targetMuscles"],
+      "type_mapping": {
+        "strength": "STRENGTH",
+        "cardio": "CARDIO",
+        "flexibility": "CARDIO",
+        "stretching": "CARDIO"
+      },
+      "serving_units": ["GRAM", "OUNCE", "CUP", "PIECE", "SERVING"]
+    },
+    "nutrition": {
+      "required_columns": ["name", "calories"],
+      "optional_columns": ["protein", "carbs", "fat", "defaultServingUnit"],
+      "serving_unit_mapping": {
+        "g": "GRAM",
+        "gram": "GRAM",
+        "oz": "OUNCE",
+        "ounce": "OUNCE",
+        "cup": "CUP",
+        "piece": "PIECE",
+        "pcs": "PIECE",
+        "serving": "SERVING"
+      }
+    }
+  },
+  "seed_options": {
+    "batch_size": 1000,
+    "on_duplicate": "skip",
+    "validate_before_seed": true,
+    "generate_logs": true
+  }
+}
