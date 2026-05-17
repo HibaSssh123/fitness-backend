@@ -28,8 +28,8 @@ export class AuthService {
         email: registerDto.email,
         password: hashedPassword,
         name: registerDto.name,
-        heightCm: registerDto.heightCm,
-        weightKg: registerDto.weightKg,
+        height: registerDto.height,
+        weight: registerDto.weight,
         calorieTarget: registerDto.calorieTarget,
       },
     });
@@ -65,8 +65,8 @@ export class AuthService {
         id: user.id,
         email: user.email,
         name: user.name,
-        heightCm: user.heightCm,
-        weightKg: user.weightKg,
+        height: user.height,
+        weight: user.weight,
         calorieTarget: user.calorieTarget,
       },
     };
