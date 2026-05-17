@@ -2,7 +2,6 @@ import { Type } from 'class-transformer';
 import {
   IsEmail,
   IsInt,
-  IsNumber,
   IsOptional,
   IsString,
   MaxLength,
@@ -26,15 +25,15 @@ export class RegisterDto {
 
   @IsOptional()
   @Type(() => Number)
-  @IsNumber()
+  @IsInt()
   @Min(0)
-  weightKg?: number;
+  weight?: number;
 
   @IsOptional()
   @Type(() => Number)
-  @IsNumber()
+  @IsInt()
   @Min(0)
-  heightCm?: number;
+  height?: number;
 
   @IsOptional()
   @Type(() => Number)
