@@ -1,11 +1,4 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Req,
-  UseGuards,
-  Query,
-} from '@nestjs/common';
+import { Controller, Get, Post, Req, UseGuards, Query } from '@nestjs/common';
 import type { Request } from 'express';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { ProgressService } from './progress.service';
@@ -34,7 +27,7 @@ export class ProgressController {
   async getProgressSummary(
     @Req() req: AuthedRequest,
     @Query('days') days?: string,
-  ) {
+  ): Promise<Record<string, any> | null> {
     const daysNum = days ? parseInt(days, 10) : 30;
     return this.progressService.getProgressSummary(req.user.sub, daysNum);
   }

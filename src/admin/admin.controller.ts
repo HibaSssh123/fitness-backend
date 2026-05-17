@@ -6,14 +6,10 @@ import {
   Param,
   Query,
   UseGuards,
-  Req,
 } from '@nestjs/common';
-import type { Request } from 'express';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { AdminGuard } from './admin.guard';
 import { AdminService } from './admin.service';
-
-type AuthedRequest = Request & { user: { sub: string; role?: string } };
 
 @Controller('admin')
 @UseGuards(JwtAuthGuard, AdminGuard)

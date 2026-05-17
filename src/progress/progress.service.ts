@@ -162,10 +162,7 @@ export class ProgressService {
   /**
    * Get progress summary for a period
    */
-  async getProgressSummary(
-    userId: string,
-    days: number = 30,
-  ) {
+  async getProgressSummary(userId: string, days: number = 30) {
     const endDate = new Date();
     const startDate = new Date();
     startDate.setDate(endDate.getDate() - days);
@@ -233,7 +230,8 @@ export class ProgressService {
       },
       activities: {
         totalWorkouts,
-        avgWorkoutsPerDay: Math.round((totalWorkouts / metrics.length) * 100) / 100,
+        avgWorkoutsPerDay:
+          Math.round((totalWorkouts / metrics.length) * 100) / 100,
       },
       dailyMetrics: metrics.map((m) => ({
         date: m.metricDate.toISOString().split('T')[0],
@@ -251,7 +249,9 @@ export class ProgressService {
   /**
    * Get progress predictions
    */
-  async getProgressPredictions(userId: string) {
+  async getProgressPredictions(
+    userId: string,
+  ): Promise<Record<string, unknown> | null> {
     const user = await this.prisma.user.findUnique({
       where: { id: userId },
     });
@@ -275,7 +275,7 @@ export class ProgressService {
     }
 
     // Simple linear prediction
-    const predictions: any = {
+    const predictions: Record<string, unknown[]> = {
       predictions: [],
     };
 
@@ -283,9 +283,9 @@ export class ProgressService {
       const dailyMetrics = summary.dailyMetrics;
       if (dailyMetrics.length >= 2) {
         // Calculate average weight loss per day
-        const firstDay = parseFloat(dailyMetrics[0].weight || '0');
+        const firstDay = parseFloat(String(dailyMetrics[0].weight || '0'));
         const lastDay = parseFloat(
-          dailyMetrics[dailyMetrics.length - 1].weight || '0',
+          String(dailyMetrics[dailyMetrics.length - 1].weight || '0'),
         );
         const avgWeightLossPerDay = (firstDay - lastDay) / dailyMetrics.length;
 
@@ -296,7 +296,7 @@ export class ProgressService {
           (currentWeight - targetWeight) / Math.max(avgWeightLossPerDay, 0.01),
         );
 
-        predictions.predictions.push({
+        (predictions.predictions as Record<string, unknown>[]).push({
           type: 'weight_loss',
           currentWeight: currentWeight,
           targetWeight: targetWeight,
@@ -315,19 +315,25 @@ export class ProgressService {
     if (user.weight && activeGoal && activeGoal.type === 'LOSE_WEIGHT') {
       const dailyMetrics = summary.dailyMetrics;
       if (dailyMetrics.length >= 2) {
-        const firstDay = parseFloat(dailyMetrics[0].weight || user.weight.toString());
+        const firstDay = parseFloat(
+          String(dailyMetrics[0].weight || user.weight.toString()),
+        );
         const lastDay = parseFloat(
-          dailyMetrics[dailyMetrics.length - 1].weight || user.weight.toString(),
+          String(
+            dailyMetrics[dailyMetrics.length - 1].weight ||
+              user.weight.toString(),
+          ),
         );
         const avgWeightLossPerDay = (firstDay - lastDay) / dailyMetrics.length;
 
         const current7DayPrediction = lastDay - avgWeightLossPerDay * 7;
         const current30DayPrediction = lastDay - avgWeightLossPerDay * 30;
 
-        predictions.predictions.push({
+        (predictions.predictions as Record<string, unknown>[]).push({
           type: 'weight_projection',
           projectedWeightIn7Days: Math.round(current7DayPrediction * 100) / 100,
-          projectedWeightIn30Days: Math.round(current30DayPrediction * 100) / 100,
+          projectedWeightIn30Days:
+            Math.round(current30DayPrediction * 100) / 100,
         });
       }
     }

@@ -29,7 +29,7 @@ export class ChatbotController {
   async sendMessage(
     @Req() req: AuthedRequest,
     @Body() createChatMessageDto: CreateChatMessageDto,
-  ) {
+  ): Promise<Record<string, any>> {
     return this.chatbotService.sendMessage(
       req.user.sub,
       createChatMessageDto.message,
@@ -41,10 +41,7 @@ export class ChatbotController {
    * GET /chat/history?limit=50
    */
   @Get('history')
-  async getHistory(
-    @Req() req: AuthedRequest,
-    @Query('limit') limit?: string,
-  ) {
+  async getHistory(@Req() req: AuthedRequest, @Query('limit') limit?: string) {
     const limitNum = limit ? parseInt(limit, 10) : 50;
     return this.chatbotService.getConversationHistory(req.user.sub, limitNum);
   }
