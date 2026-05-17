@@ -10,6 +10,9 @@ import { FoodLogsModule } from './food-logs/food-logs.module';
 import { DashboardModule } from './dashboard/dashboard.module';
 import { ExercisesModule } from './exercises/exercises.module';
 import { WorkoutsModule } from './workouts/workouts.module';
+import { AdminModule } from './admin/admin.module';
+import { ProgressModule } from './progress/progress.module';
+import { ChatbotModule } from './chatbot/chatbot.module';
 
 @Module({
   imports: [
@@ -22,6 +25,9 @@ import { WorkoutsModule } from './workouts/workouts.module';
     DashboardModule,
     ExercisesModule,
     WorkoutsModule,
+    AdminModule,
+    ProgressModule,
+    ChatbotModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -33,17 +33,24 @@ enum ServingUnit {
   SERVING
 }
 
+enum UserRole {
+  USER
+  ADMIN
+}
+
 model User {
   id            String   @id @default(cuid())
   email         String   @unique
   password      String
   name          String?
+  role          UserRole @default(USER)
   height        Int?
   weight        Int?
   calorieTarget Int?
   proteinTarget Float?
   carbsTarget   Float?
   fatTarget     Float?
+  isActive      Boolean  @default(true)
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 
@@ -52,6 +59,8 @@ model User {
   goalLogs  GoalLog[]
   foods     Food[]
   workouts  Workout[]
+  chatMessages ChatMessage[]
+  progressMetrics ProgressMetric[]
 }
 
 model Food {
@@ -209,4 +218,42 @@ model WorkoutSet {
 
   @@unique([workoutExerciseId, setNumber])
   @@index([workoutExerciseId])
+}
+
+model ProgressMetric {
+  id                  String   @id @default(cuid())
+  userId              String
+  metricDate          DateTime @default(now())
+  weightKg            Float?
+  calorieTarget       Int?
+  calorieConsumed     Int?
+  calorieAdherencePercent Float?
+  proteinTarget       Float?
+  proteinConsumed     Float?
+  carbsTarget         Float?
+  carbsConsumed       Float?
+  fatTarget           Float?
+  fatConsumed         Float?
+  workoutsCompleted   Int      @default(0)
+  totalCaloriesBurned Int      @default(0)
+  goalProgressPercent Float?   @default(0)
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+  user                User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, metricDate])
+  @@index([userId, createdAt])
+}
+
+model ChatMessage {
+  id        String   @id @default(cuid())
+  userId    String
+  role      String   // "user" or "assistant"
+  content   String
+  metadata  String?  // Store JSON metadata (user stats at time of message)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, createdAt])
 }
