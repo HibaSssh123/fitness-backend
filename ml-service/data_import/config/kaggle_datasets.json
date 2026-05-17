@@ -2,43 +2,43 @@
   "datasets": [
     {
       "id": 1,
-      "name": "nishayadav212/gym-exercise-dataset",
+      "name": "edqian/gym-exercises",
       "type": "exercises",
-      "description": "Comprehensive gym exercise dataset with 14K+ exercises",
+      "description": "Comprehensive gym exercise dataset with exercises and muscle groups",
       "source": "Kaggle",
       "license": "CC0: Public Domain",
       "featured": true,
-      "size_mb": 5,
-      "csv_file": "megaGymDataset.csv",
+      "size_mb": 3,
+      "csv_file": "exercises.csv",
       "columns": {
-        "name": "exercise",
+        "name": "title",
         "type": "type",
-        "category": "bodypart",
+        "category": "target",
         "description": "description",
-        "target_muscles": "muscles",
+        "target_muscles": "target",
         "equipment": "equipment"
       },
-      "notes": "Primary source for exercise data. Contains standardized exercise definitions with muscle groups."
+      "notes": "Primary source for exercise data. Contains exercise definitions with target muscles and equipment types."
     },
     {
       "id": 2,
-      "name": "uciml/mushroom-classification",
+      "name": "openfoodfacts/food-products-open-database",
       "type": "nutrition",
-      "description": "Comprehensive nutrition database with food items",
+      "description": "Open Food Facts database with comprehensive nutrition information",
       "source": "Kaggle",
-      "license": "CC BY-SA 4.0",
+      "license": "ODbL (Open Data Commons)",
       "featured": false,
-      "size_mb": 3,
-      "csv_file": "nutrition_data.csv",
+      "size_mb": 45,
+      "csv_file": "products.csv",
       "columns": {
-        "name": "food",
-        "calories": "calories",
-        "protein": "protein",
-        "carbs": "carbs",
-        "fat": "fat",
-        "serving_unit": "servingunit"
+        "name": "product_name",
+        "calories": "energy_kcal_100g",
+        "protein": "proteins_100g",
+        "carbs": "carbohydrates_100g",
+        "fat": "fat_100g",
+        "serving_unit": "serving_unit"
       },
-      "notes": "Food nutrition database. Data needs transformation to match schema."
+      "notes": "Comprehensive food products database. Contains standardized nutrition facts per 100g. Pre-filtered to include only items with complete nutrition data."
     },
     {
       "id": 3,
