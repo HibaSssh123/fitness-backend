@@ -96,8 +96,8 @@ from data_import.kaggle_import import KaggleDatasetImporter
 importer = KaggleDatasetImporter()
 
 # Download specific dataset
-importer.download_kaggle_dataset("nishayadav212/gym-exercise-dataset")
-importer.download_kaggle_dataset("your-username/nutrition-dataset")
+importer.download_kaggle_dataset("edqian/gym-exercises")
+importer.download_kaggle_dataset("openfoodfacts/food-products-open-database")
 ```
 
 #### 2. Transform Data
@@ -105,12 +105,12 @@ importer.download_kaggle_dataset("your-username/nutrition-dataset")
 ```python
 # Transform gym exercises
 exercises_df = importer.transform_gym_exercises(
-    "ml-service/data_import/downloads/nishayadav212_gym-exercise-dataset/megaGymDataset.csv"
+    "ml-service/data_import/downloads/edqian_gym-exercises/exercises.csv"
 )
 
 # Transform nutrition data
 foods_df = importer.transform_nutrition_data(
-    "ml-service/data_import/downloads/your-data.csv"
+    "ml-service/data_import/downloads/openfoodfacts_food-products-open-database/products.csv"
 )
 ```
 
@@ -159,21 +159,21 @@ seeder.disconnect()
 ## Recommended Kaggle Datasets
 
 ### 1. Gym Exercise Dataset (Recommended)
-- **Name**: `nishayadav212/gym-exercise-dataset`
+- **Name**: `edqian/gym-exercises`
 - **Type**: Exercise data
-- **Records**: 14,000+ exercises
-- **Size**: ~5 MB
-- **Columns**: name, type, bodypart, description, muscles, equipment
+- **Records**: 10,000+ exercises
+- **Size**: ~3 MB
+- **Columns**: title, type, target, description, equipment
 - **License**: CC0 (Public Domain)
 - **Use Case**: Exercise recommendations, exercise library
 
 ### 2. Food Nutrition Database
-- **Name**: Multiple options available
+- **Name**: `openfoodfacts/food-products-open-database`
 - **Type**: Nutrition data
-- **Records**: 5,000-100,000+ foods
-- **Columns**: name, calories, protein, carbs, fat, serving_unit
-- **License**: Varies (check before use)
-- **Use Case**: Nutrition tracking, calorie predictions
+- **Records**: 500,000+ food products
+- **Columns**: product_name, energy_kcal_100g, proteins_100g, carbohydrates_100g, fat_100g
+- **License**: ODbL (Open Data Commons)
+- **Use Case**: Nutrition tracking, calorie predictions, comprehensive food database
 
 ### 3. Fitness Tracking Data
 - **Type**: User workout metrics
@@ -220,10 +220,16 @@ Example configuration:
 {
   "datasets": [
     {
-      "name": "nishayadav212/gym-exercise-dataset",
+      "name": "edqian/gym-exercises",
       "type": "exercises",
       "featured": true,
-      "csv_file": "megaGymDataset.csv"
+      "csv_file": "exercises.csv"
+    },
+    {
+      "name": "openfoodfacts/food-products-open-database",
+      "type": "nutrition",
+      "featured": false,
+      "csv_file": "products.csv"
     }
   ],
   "seed_options": {

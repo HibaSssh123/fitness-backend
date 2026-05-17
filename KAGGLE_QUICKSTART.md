@@ -53,8 +53,8 @@ This will:
 
 After running the setup, your database will have:
 
-- **14,000+ Gym Exercises** - Comprehensive exercise library with muscle groups
-- **Nutritional Data** - Food items with calories and macros
+- **10,000+ Gym Exercises** - Comprehensive exercise library with muscle groups and equipment
+- **500,000+ Food Products** - Open Food Facts nutrition database with complete nutrition information
 - **Exercise Categories** - Organized exercise types
 
 ## Verify It Works
