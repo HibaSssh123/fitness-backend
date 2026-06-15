@@ -92,7 +92,7 @@ ml-service/data_import/
 
 | Dataset | Records | Type | License |
 |---------|---------|------|---------|
-| Gym Exercises | 2,500+ | Exercise data | See Kaggle dataset page |
+| Gym Exercises | 2,500+ | Exercise data | Unknown (verify on Kaggle) |
 | Nutrition | 5,000-100K+ | Food/nutrition | CC-BY-SA |
 | Fitness Tracking | Variable | User metrics | CC0 |
 

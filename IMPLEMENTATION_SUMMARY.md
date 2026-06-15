@@ -124,7 +124,7 @@ This document summarizes the Kaggle fitness dataset integration that has been fu
 - **Source**: `niharika41298/gym-exercise-data`
 - **Records**: 2,500+ exercises
 - **Data**: name, type, muscle group, equipment, description
-- **License**: CC0 (Public Domain)
+- **License**: Unknown (verify on Kaggle)
 - **Use**: Exercise recommendations, exercise library
 
 ### 2. Nutrition Database

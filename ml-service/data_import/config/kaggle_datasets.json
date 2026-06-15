@@ -6,7 +6,7 @@
       "type": "exercises",
       "description": "Comprehensive gym exercise dataset with exercise type, muscle, and equipment",
       "source": "Kaggle",
-      "license": "See Kaggle dataset page",
+      "license": "Unknown (verify on Kaggle)",
       "featured": true,
       "size_mb": 3,
       "csv_file": "exercises.csv",

@@ -164,7 +164,7 @@ seeder.disconnect()
 - **Records**: 2,500+ exercises
 - **Size**: ~3 MB
 - **Columns**: exercise_name, type, muscle, equipment
-- **License**: CC0 (Public Domain)
+- **License**: Unknown (verify on Kaggle)
 - **Use Case**: Exercise recommendations, exercise library
 
 ### 2. Food Nutrition Database
@@ -327,7 +327,7 @@ print(json.dumps(report, indent=2))
 - Always check dataset licensing before production use
 - Respect Creative Commons and other licenses
 - Document data sources in your application
-- Current datasets use CC0 or CC-BY-SA licenses
+- Dataset licenses vary; verify each dataset license on Kaggle before production use
 
 ### Data Privacy
 
