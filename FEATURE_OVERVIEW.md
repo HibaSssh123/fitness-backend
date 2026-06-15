@@ -4,7 +4,7 @@
 
 The fitness-backend now includes a complete Kaggle dataset integration system! This allows you to enhance your application with:
 
-- **14,000+ gym exercises** with muscle groups and equipment information
+- **2,500+ gym exercises** with type, muscle, and equipment information
 - **Comprehensive nutrition database** with calories and macros
 - **Improved ML models** trained on real-world fitness data
 
@@ -31,7 +31,7 @@ bash setup.sh stats
 
 Expected output:
 ```
-Exercises: 14,000+
+Exercises: 2,500+
 Exercise Categories: 30-50
 Foods: 5,000+
 ```
@@ -92,7 +92,7 @@ ml-service/data_import/
 
 | Dataset | Records | Type | License |
 |---------|---------|------|---------|
-| Gym Exercises | 14,000+ | Exercise data | CC0 |
+| Gym Exercises | 2,500+ | Exercise data | See Kaggle dataset page |
 | Nutrition | 5,000-100K+ | Food/nutrition | CC-BY-SA |
 | Fitness Tracking | Variable | User metrics | CC0 |
 

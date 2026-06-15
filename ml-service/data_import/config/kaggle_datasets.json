@@ -2,23 +2,23 @@
   "datasets": [
     {
       "id": 1,
-      "name": "edqian/gym-exercises",
+      "name": "niharika41298/gym-exercise-data",
       "type": "exercises",
-      "description": "Comprehensive gym exercise dataset with exercises and muscle groups",
+      "description": "Comprehensive gym exercise dataset with exercise type, muscle, and equipment",
       "source": "Kaggle",
-      "license": "CC0: Public Domain",
+      "license": "See Kaggle dataset page",
       "featured": true,
       "size_mb": 3,
       "csv_file": "exercises.csv",
       "columns": {
-        "name": "title",
+        "name": "exercise_name",
         "type": "type",
-        "category": "target",
-        "description": "description",
-        "target_muscles": "target",
+        "category": "muscle",
+        "description": "instructions",
+        "target_muscles": "muscle",
         "equipment": "equipment"
       },
-      "notes": "Primary source for exercise data. Contains exercise definitions with target muscles and equipment types."
+      "notes": "Primary source for exercise data. Contains exercise definitions with type, muscle, and equipment fields."
     },
     {
       "id": 2,

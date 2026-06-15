@@ -36,7 +36,7 @@ This document summarizes the Kaggle fitness dataset integration that has been fu
 
 5. **`ml-service/data_import/config/kaggle_datasets.json`** (2822 bytes)
    - Configuration for 3 Kaggle datasets:
-     - Gym Exercise Dataset (14K+ exercises)
+     - Gym Exercise Dataset (2,500+ exercises)
      - Nutrition Database
      - Fitness Tracking Data
    - Column mappings for automatic transformation
@@ -121,8 +121,8 @@ This document summarizes the Kaggle fitness dataset integration that has been fu
 ## 📊 Supported Datasets
 
 ### 1. Gym Exercise Dataset ⭐ (Recommended)
-- **Source**: `nishayadav212/gym-exercise-dataset`
-- **Records**: 14,000+ exercises
+- **Source**: `niharika41298/gym-exercise-data`
+- **Records**: 2,500+ exercises
 - **Data**: name, type, muscle group, equipment, description
 - **License**: CC0 (Public Domain)
 - **Use**: Exercise recommendations, exercise library
@@ -178,7 +178,7 @@ After running the integration:
 
 | Metric | Count |
 |--------|-------|
-| Exercises | 14,000+ |
+| Exercises | 2,500+ |
 | Exercise Categories | 30-50 |
 | Food Items | 5,000-100,000+ |
 | Database Size Increase | 50-500 MB |
@@ -221,7 +221,7 @@ After running the integration:
 
 ## 🎯 Benefits
 
-1. **14,000+ Exercises**: Comprehensive exercise library with standardized definitions
+1. **2,500+ Exercises**: Exercise library with standardized definitions
 2. **Accurate Recommendations**: Better exercise suggestions based on real data
 3. **Improved Nutrition Tracking**: Larger food database for user selection
 4. **Better ML Models**: Train with 10-100x more data

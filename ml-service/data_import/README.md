@@ -31,7 +31,7 @@ from data_import.kaggle_import import KaggleDatasetImporter
 importer = KaggleDatasetImporter()
 
 # Download dataset from Kaggle
-importer.download_kaggle_dataset("nishayadav212/gym-exercise-dataset")
+importer.download_kaggle_dataset("niharika41298/gym-exercise-data")
 ```
 
 ### 2. Transform Data
