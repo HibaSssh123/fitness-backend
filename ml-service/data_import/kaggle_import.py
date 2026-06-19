@@ -77,10 +77,16 @@ class KaggleDatasetImporter:
             # Standardize column names
             df.columns = df.columns.str.lower().str.strip()
             
+            def get_column(*column_names):
+                for column_name in column_names:
+                    if column_name in df.columns:
+                        return df[column_name]
+                return pd.Series([""] * len(df), index=df.index)
+
             # Create transformed dataframe
             transformed = pd.DataFrame()
-            transformed["name"] = df.get("name", df.get("exercise", ""))
-            transformed["type"] = df.get("type", "").str.upper()
+            transformed["name"] = get_column("name", "exercise", "exercise_name", "title")
+            transformed["type"] = get_column("type", "exercise_type").astype(str).str.upper()
             
             # Map types to STRENGTH or CARDIO
             type_mapping = {
@@ -93,16 +99,24 @@ class KaggleDatasetImporter:
                 lambda x: type_mapping.get(x.lower(), "STRENGTH")
             )
             
-            transformed["category"] = df.get("category", df.get("bodypart", ""))
-            transformed["description"] = df.get("description", "")
+            transformed["category"] = get_column("category", "bodypart", "muscle")
+            transformed["description"] = get_column("description", "instructions")
             
             # Handle target muscles
+            muscle_column = None
             if "muscles" in df.columns:
-                transformed["targetMuscles"] = df["muscles"].apply(
+                muscle_column = "muscles"
+            elif "muscle" in df.columns:
+                muscle_column = "muscle"
+            elif "target" in df.columns:
+                muscle_column = "target"
+
+            if muscle_column:
+                transformed["targetMuscles"] = df[muscle_column].apply(
                     lambda x: str(x).split(",") if pd.notna(x) else []
                 )
             else:
-                transformed["targetMuscles"] = [[]]
+                transformed["targetMuscles"] = pd.Series([[] for _ in range(len(df))], index=df.index)
             
             # Remove duplicates
             transformed = transformed.drop_duplicates(subset=["name"], keep="first")

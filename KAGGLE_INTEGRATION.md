@@ -14,7 +14,7 @@ The Kaggle integration system provides:
 
 ## Benefits
 
-- **14K+ Exercises**: Access comprehensive gym exercise database with muscle groups and equipment
+- **2,500+ Exercises**: Access gym exercise database with type, muscle, and equipment fields
 - **Nutrition Database**: Real-world food nutritional data with calories, macros, and serving sizes
 - **Improved ML Models**: Train models on larger, validated datasets for better predictions
 - **Better Recommendations**: More accurate exercise and nutrition recommendations based on real data
@@ -96,7 +96,7 @@ from data_import.kaggle_import import KaggleDatasetImporter
 importer = KaggleDatasetImporter()
 
 # Download specific dataset
-importer.download_kaggle_dataset("edqian/gym-exercises")
+importer.download_kaggle_dataset("niharika41298/gym-exercise-data")
 importer.download_kaggle_dataset("openfoodfacts/food-products-open-database")
 ```
 
@@ -105,7 +105,7 @@ importer.download_kaggle_dataset("openfoodfacts/food-products-open-database")
 ```python
 # Transform gym exercises
 exercises_df = importer.transform_gym_exercises(
-    "ml-service/data_import/downloads/edqian_gym-exercises/exercises.csv"
+    "ml-service/data_import/downloads/niharika41298_gym-exercise-data/exercises.csv"
 )
 
 # Transform nutrition data
@@ -159,12 +159,12 @@ seeder.disconnect()
 ## Recommended Kaggle Datasets
 
 ### 1. Gym Exercise Dataset (Recommended)
-- **Name**: `edqian/gym-exercises`
+- **Name**: `niharika41298/gym-exercise-data`
 - **Type**: Exercise data
-- **Records**: 10,000+ exercises
+- **Records**: 2,500+ exercises
 - **Size**: ~3 MB
-- **Columns**: title, type, target, description, equipment
-- **License**: CC0 (Public Domain)
+- **Columns**: exercise_name, type, muscle, equipment
+- **License**: Unknown (verify on Kaggle)
 - **Use Case**: Exercise recommendations, exercise library
 
 ### 2. Food Nutrition Database
@@ -187,11 +187,11 @@ seeder.disconnect()
 
 | Kaggle Column | Schema Column | Type | Notes |
 |---|---|---|---|
-| exercise/name | name | String | Required |
-| type | type | ENUM (STRENGTH, CARDIO) | Mapped during transform |
-| bodypart | category | String | Optional |
-| description | description | String | Optional |
-| muscles | targetMuscles | String[] | Split on comma |
+| exercise_name/name/exercise | name | String | Required |
+| type/exercise_type | type | ENUM (STRENGTH, CARDIO) | Mapped during transform |
+| muscle/bodypart | category | String | Optional |
+| instructions/description | description | String | Optional |
+| muscle/muscles | targetMuscles | String[] | Split on comma |
 | equipment | (not stored) | - | Available in raw data |
 
 ### Food Table
@@ -220,7 +220,7 @@ Example configuration:
 {
   "datasets": [
     {
-      "name": "edqian/gym-exercises",
+      "name": "niharika41298/gym-exercise-data",
       "type": "exercises",
       "featured": true,
       "csv_file": "exercises.csv"
@@ -327,7 +327,7 @@ print(json.dumps(report, indent=2))
 - Always check dataset licensing before production use
 - Respect Creative Commons and other licenses
 - Document data sources in your application
-- Current datasets use CC0 or CC-BY-SA licenses
+- Dataset licenses vary; verify each dataset license on Kaggle before production use
 
 ### Data Privacy
 
